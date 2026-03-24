@@ -115,10 +115,50 @@ function Home() {
 
     {/* Filters */}
     <div className="mb-4 flex gap-4">
-      <label>
-        <input type="radio" checked={jobType === "all"} onChange={() => setJobType("all")} /> All
-      </label>
-      <label>
+      <div className="mb-4 flex gap-6 items-center">
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="jobType"
+      checked={jobType === "all"}
+      onChange={() => setJobType("all")}
+    />
+    All
+  </label>
+
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="jobType"
+      data-testid="filter-job-type-remote"
+      checked={jobType === "Remote"}
+      onChange={() => setJobType("Remote")}
+    />
+    Remote
+  </label>
+
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="jobType"
+      data-testid="filter-job-type-hybrid"
+      checked={jobType === "Hybrid"}
+      onChange={() => setJobType("Hybrid")}
+    />
+    Hybrid
+  </label>
+
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="jobType"
+      checked={jobType === "Onsite"}
+      onChange={() => setJobType("Onsite")}
+    />
+    Onsite
+  </label>
+</div>
+      {/* <label>
         <input type="radio" data-testid="filter-job-type-remote" onChange={() => setJobType("Remote")} /> Remote
       </label>
       <label>
@@ -126,7 +166,7 @@ function Home() {
       </label>
       <label>
         <input type="radio" onChange={() => setJobType("Onsite")} /> Onsite
-      </label>
+      </label> */}
     </div>
 
     {/* Job List */}
