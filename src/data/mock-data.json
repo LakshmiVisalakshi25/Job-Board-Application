@@ -1,0 +1,31 @@
+{
+  "jobs": [
+    { "id": 1, "title": "Frontend Developer", "companyId": 1, "location": "Hyderabad", "jobType": "Remote", "salary": 80000, "experienceLevel": "Junior", "skills": ["React", "JavaScript"], "postedDate": "2023-10-26T10:00:00Z" },
+    { "id": 2, "title": "Backend Developer", "companyId": 2, "location": "Bangalore", "jobType": "Onsite", "salary": 100000, "experienceLevel": "Senior", "skills": ["Node.js", "MongoDB"], "postedDate": "2023-10-20T10:00:00Z" },
+    { "id": 3, "title": "Full Stack Developer", "companyId": 1, "location": "Chennai", "jobType": "Hybrid", "salary": 120000, "experienceLevel": "Mid", "skills": ["React", "Node.js"], "postedDate": "2023-10-15T10:00:00Z" },
+
+    { "id": 4, "title": "UI Developer", "companyId": 2, "location": "Delhi", "jobType": "Remote", "salary": 70000, "experienceLevel": "Junior", "skills": ["HTML", "CSS"], "postedDate": "2023-10-10T10:00:00Z" },
+    { "id": 5, "title": "Software Engineer", "companyId": 1, "location": "Pune", "jobType": "Onsite", "salary": 90000, "experienceLevel": "Mid", "skills": ["Java", "Spring"], "postedDate": "2023-10-05T10:00:00Z" },
+    { "id": 6, "title": "React Developer", "companyId": 2, "location": "Mumbai", "jobType": "Remote", "salary": 95000, "experienceLevel": "Mid", "skills": ["React", "Redux"], "postedDate": "2023-10-01T10:00:00Z" },
+    { "id": 7, "title": "DevOps Engineer", "companyId": 1, "location": "Hyderabad", "jobType": "Hybrid", "salary": 110000, "experienceLevel": "Senior", "skills": ["Docker", "AWS"], "postedDate": "2023-09-28T10:00:00Z" },
+    { "id": 8, "title": "Data Analyst", "companyId": 2, "location": "Bangalore", "jobType": "Onsite", "salary": 85000, "experienceLevel": "Junior", "skills": ["SQL", "Python"], "postedDate": "2023-09-25T10:00:00Z" },
+    { "id": 9, "title": "QA Engineer", "companyId": 1, "location": "Chennai", "jobType": "Remote", "salary": 75000, "experienceLevel": "Junior", "skills": ["Testing", "Selenium"], "postedDate": "2023-09-20T10:00:00Z" },
+    { "id": 10, "title": "Mobile Developer", "companyId": 2, "location": "Delhi", "jobType": "Hybrid", "salary": 105000, "experienceLevel": "Mid", "skills": ["React Native"], "postedDate": "2023-09-18T10:00:00Z" },
+
+    { "id": 11, "title": "System Engineer", "companyId": 1, "location": "Pune", "jobType": "Onsite", "salary": 88000, "experienceLevel": "Junior", "skills": ["Linux"], "postedDate": "2023-09-15T10:00:00Z" },
+    { "id": 12, "title": "Cloud Engineer", "companyId": 2, "location": "Mumbai", "jobType": "Remote", "salary": 115000, "experienceLevel": "Senior", "skills": ["AWS", "Azure"], "postedDate": "2023-09-12T10:00:00Z" },
+    { "id": 13, "title": "AI Engineer", "companyId": 1, "location": "Hyderabad", "jobType": "Hybrid", "salary": 130000, "experienceLevel": "Senior", "skills": ["Python", "ML"], "postedDate": "2023-09-10T10:00:00Z" },
+    { "id": 14, "title": "Web Developer", "companyId": 2, "location": "Bangalore", "jobType": "Onsite", "salary": 78000, "experienceLevel": "Junior", "skills": ["HTML", "JS"], "postedDate": "2023-09-08T10:00:00Z" },
+    { "id": 15, "title": "Database Admin", "companyId": 1, "location": "Chennai", "jobType": "Remote", "salary": 99000, "experienceLevel": "Mid", "skills": ["SQL"], "postedDate": "2023-09-05T10:00:00Z" },
+    { "id": 16, "title": "Security Engineer", "companyId": 2, "location": "Delhi", "jobType": "Hybrid", "salary": 125000, "experienceLevel": "Senior", "skills": ["Cybersecurity"], "postedDate": "2023-09-03T10:00:00Z" },
+    { "id": 17, "title": "Network Engineer", "companyId": 1, "location": "Pune", "jobType": "Onsite", "salary": 87000, "experienceLevel": "Mid", "skills": ["Networking"], "postedDate": "2023-09-01T10:00:00Z" },
+    { "id": 18, "title": "Game Developer", "companyId": 2, "location": "Mumbai", "jobType": "Remote", "salary": 92000, "experienceLevel": "Mid", "skills": ["Unity"], "postedDate": "2023-08-30T10:00:00Z" },
+    { "id": 19, "title": "Embedded Engineer", "companyId": 1, "location": "Hyderabad", "jobType": "Hybrid", "salary": 108000, "experienceLevel": "Senior", "skills": ["C"], "postedDate": "2023-08-28T10:00:00Z" },
+    { "id": 20, "title": "Support Engineer", "companyId": 2, "location": "Bangalore", "jobType": "Onsite", "salary": 65000, "experienceLevel": "Junior", "skills": ["Support"], "postedDate": "2023-08-25T10:00:00Z" }
+  ],
+
+  "companies": [
+    { "id": 1, "name": "Tech Solutions", "size": "100+", "description": "Software company" },
+    { "id": 2, "name": "Innovate Tech", "size": "500+", "description": "IT services" }
+  ]
+}
