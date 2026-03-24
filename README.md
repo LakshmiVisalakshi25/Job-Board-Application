@@ -56,7 +56,7 @@ src/
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone <your-repo-link>
+git clone (https://github.com/LakshmiVisalakshi25/Job-Board-Application)
 cd job-board
 ```
 
