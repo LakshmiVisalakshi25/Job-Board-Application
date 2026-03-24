@@ -1,16 +1,133 @@
-# React + Vite
+# 🚀 Job Board Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📌 Overview
 
-Currently, two official plugins are available:
+This project is a **React-based Job Board Application** that allows users to browse, search, filter, sort, and bookmark job listings. It provides an interactive and user-friendly interface to manage job opportunities efficiently.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🎯 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* 🔍 Search jobs by title
+* 🎯 Filter jobs by type (Remote, Hybrid, Onsite)
+* 💰 Sort jobs by salary (High → Low)
+* 📄 Pagination for handling multiple jobs
+* ⭐ Bookmark jobs using Local Storage
+* 📌 Tracker page to view bookmarked jobs
+* 🔄 Clear all filters functionality
+* 🔁 Grid and List view toggle
+* 📱 Responsive UI using Tailwind CSS
+* 🐳 Docker support for containerization
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Technologies Used
+
+* React.js
+* JavaScript (ES6+)
+* Tailwind CSS
+* React Router
+* Local Storage
+* Docker
+* Vite
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+ ├── components/
+ ├── pages/
+ │    ├── Home.jsx
+ │    ├── Tracker.jsx
+ ├── data/
+ │    └── mock-data.json
+ ├── hooks/
+ ├── store/
+ ├── App.jsx
+ ├── main.jsx
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone the repository
+
+```bash
+git clone (https://github.com/LakshmiVisalakshi25/Job-Board-Application)
+cd job-board
+```
+
+### 2️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+### 3️⃣ Run the application
+
+```bash
+npm run dev
+```
+
+👉 Open:
+
+```
+http://localhost:5173
+```
+
+---
+
+## 🐳 Docker Setup
+
+### Build and run using Docker
+
+```bash
+docker-compose up --build
+```
+
+👉 Open:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 📊 Data Source
+
+* The application uses a **local JSON file** (`mock-data.json`) as a mock database.
+* Contains **20+ job listings**.
+
+---
+
+## 🔐 Bookmark Feature
+
+* Bookmarked jobs are stored in **localStorage**
+* Key used:
+
+```
+bookmarkedJobs
+```
+
+---
+
+## 📄 Pages
+
+### 🏠 Home Page
+
+* Displays all job listings
+* Supports filtering, searching, sorting, pagination
+
+### 📌 Tracker Page
+
+* Displays only bookmarked jobs
+
+
+## 👨‍💻 Author
+
+**Ganisetti Lakshmi Visalakshi**
+
+
