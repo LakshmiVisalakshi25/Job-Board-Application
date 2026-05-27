@@ -66,7 +66,7 @@ function Profile() {
 
     fetch(
 
-      `https://job-board-backend-755o.onrender.com//api/profile/${userId}`
+      `https://job-board-backend-755o.onrender.com/api/profile/${userId}`
 
     )
       .then((res) =>
@@ -152,7 +152,7 @@ function Profile() {
         const res =
           await fetch(
 
-            `https://job-board-backend-755o.onrender.com//api/profile/${userId}`,
+            `https://job-board-backend-755o.onrender.com/api/profile/${userId}`,
 
             {
 

@@ -48,7 +48,7 @@ function Home() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await fetch("https://job-board-backend-755o.onrender.com//api/jobs");
+        const res = await fetch("https://job-board-backend-755o.onrender.com/api/jobs");
         const data = await res.json();
         setAllJobs(data);
       } catch (err) {
@@ -67,7 +67,7 @@ function Home() {
     const fetchApplications = async () => {
       try {
         const res = await fetch(
-          `https://job-board-backend-755o.onrender.com//api/user-applications/${userId}`
+          `https://job-board-backend-755o.onrender.com/api/user-applications/${userId}`
         );
         const data = await res.json();
 
@@ -102,7 +102,7 @@ function Home() {
   // =====================================
   useEffect(() => {
     if (!userId) return;
-    fetch(`https://job-board-backend-755o.onrender.com//api/bookmarks/${userId}`)
+    fetch(`https://job-board-backend-755o.onrender.com/api/bookmarks/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         const ids = data.map((b) => b.jobId);
@@ -182,14 +182,14 @@ function Home() {
   const toggleBookmark = async (jobId) => {
     try {
       if (bookmarkedJobs.includes(jobId)) {
-        await fetch("https://job-board-backend-755o.onrender.com//api/bookmarks", {
+        await fetch("https://job-board-backend-755o.onrender.com/api/bookmarks", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, jobId }),
         });
         setBookmarkedJobs(bookmarkedJobs.filter((id) => id !== jobId));
       } else {
-        await fetch("https://job-board-backend-755o.onrender.com//api/bookmarks", {
+        await fetch("https://job-board-backend-755o.onrender.com/api/bookmarks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, jobId }),
@@ -230,7 +230,7 @@ function Home() {
     }
 
     try {
-      const res = await fetch("https://job-board-backend-755o.onrender.com//api/apply", {
+      const res = await fetch("https://job-board-backend-755o.onrender.com/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, jobId: selectedJob._id, ...formData }),
@@ -249,7 +249,7 @@ function Home() {
   // =====================================
   const withdrawApplication = async (jobId) => {
     try {
-      const res = await fetch("https://job-board-backend-755o.onrender.com//api/apply", {
+      const res = await fetch("https://job-board-backend-755o.onrender.com/api/apply", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, jobId }),

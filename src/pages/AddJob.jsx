@@ -129,7 +129,7 @@ function AddJob() {
 
         const res =
           await fetch(
-            "https://job-board-backend-755o.onrender.com//api/jobs",
+            "https://job-board-backend-755o.onrender.com/api/jobs",
             {
 
               method: "POST",

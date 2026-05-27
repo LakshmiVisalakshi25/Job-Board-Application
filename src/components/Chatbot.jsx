@@ -79,7 +79,7 @@ function Chatbot() {
 
         const res =
           await fetch(
-            "https://job-board-backend-755o.onrender.com//api/chatbot",
+            "https://job-board-backend-755o.onrender.com/api/chatbot",
             {
 
               method: "POST",

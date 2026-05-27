@@ -80,7 +80,7 @@ function Tracker() {
           const bookmarkRes =
             await fetch(
 
-              `https://job-board-backend-755o.onrender.com//api/bookmarks/${userId}`
+              `https://job-board-backend-755o.onrender.com/api/bookmarks/${userId}`
 
             );
 
@@ -98,7 +98,7 @@ function Tracker() {
           const appRes =
             await fetch(
 
-              `https://job-board-backend-755o.onrender.com//api/user-applications/${userId}`
+              `https://job-board-backend-755o.onrender.com/api/user-applications/${userId}`
 
             );
 
@@ -111,7 +111,7 @@ function Tracker() {
           const jobsRes =
             await fetch(
 
-              "https://job-board-backend-755o.onrender.com//api/jobs"
+              "https://job-board-backend-755o.onrender.com/api/jobs"
 
             );
 
@@ -186,7 +186,7 @@ function Tracker() {
       try {
 
         await fetch(
-          "https://job-board-backend-755o.onrender.com//api/bookmarks",
+          "https://job-board-backend-755o.onrender.com/api/bookmarks",
           {
 
             method: "DELETE",
