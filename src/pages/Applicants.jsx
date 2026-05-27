@@ -24,7 +24,7 @@ function Applicants() {
     () => {
 
       fetch(
-        `http://localhost:5000/api/applications/${jobId}`
+        `https://job-board-backend-755o.onrender.com//api/applications/${jobId}`
       )
         .then((res) =>
           res.json()
@@ -62,7 +62,7 @@ function Applicants() {
 
         const res =
           await fetch(
-            "http://localhost:5000/api/application-status",
+            "https://job-board-backend-755o.onrender.com//api/application-status",
             {
 
               method: "PUT",

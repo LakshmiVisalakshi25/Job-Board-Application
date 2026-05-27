@@ -56,7 +56,7 @@ function AdminDashboard() {
   useEffect(() => {
 
     fetch(
-      "http://localhost:5000/api/admin/analytics"
+      "https://job-board-backend-755o.onrender.com//api/admin/analytics"
     )
       .then((res) =>
         res.json()

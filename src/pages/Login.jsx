@@ -65,7 +65,7 @@ function Login() {
 
         const res =
           await fetch(
-            "http://localhost:5000/api/login",
+            "https://job-board-backend-755o.onrender.com//api/login",
             {
 
               method: "POST",
@@ -155,7 +155,7 @@ function Login() {
 
         const res =
           await fetch(
-            "http://localhost:5000/api/send-otp",
+            "https://job-board-backend-755o.onrender.com//api/send-otp",
             {
 
               method: "POST",
@@ -224,7 +224,7 @@ function Login() {
 
         const res =
           await fetch(
-            "http://localhost:5000/api/reset-password",
+            "https://job-board-backend-755o.onrender.com//api/reset-password",
             {
 
               method: "POST",

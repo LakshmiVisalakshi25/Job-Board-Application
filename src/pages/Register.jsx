@@ -50,7 +50,7 @@ function Register() {
       setLoading(true);
 
       const res = await fetch(
-        "http://localhost:5000/api/register",
+        "https://job-board-backend-755o.onrender.com//api/register",
         {
           method: "POST",
           headers: {
