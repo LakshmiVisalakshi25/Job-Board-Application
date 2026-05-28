@@ -188,7 +188,7 @@ function Chatbot() {
 
   return (
 
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-20 sm:bottom-4 right-3 sm:right-4 z-50">
 
       {/* OPEN BUTTON */}
       {!open && (
@@ -197,7 +197,7 @@ function Chatbot() {
           onClick={() =>
             setOpen(true)
           }
-          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded-full shadow-2xl transition"
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-5 py-3 rounded-full shadow-2xl transition text-sm sm:text-base"
         >
           🤖 AI Assistant
         </button>
@@ -207,14 +207,14 @@ function Chatbot() {
       {/* CHAT WINDOW */}
       {open && (
 
-        <div className="w-96 h-[600px] bg-white dark:bg-gray-900 shadow-2xl rounded-2xl flex flex-col overflow-hidden border dark:border-gray-700 transition duration-300">
+        <div className="w-[95vw] sm:w-96 h-[85vh] sm:h-[600px] bg-white dark:bg-gray-900 shadow-2xl rounded-2xl flex flex-col overflow-hidden border dark:border-gray-700 transition duration-300">
 
           {/* HEADER */}
-          <div className="bg-blue-500 text-white p-4 flex justify-between items-center">
+          <div className="bg-blue-500 text-white p-3 sm:p-4 flex justify-between items-center">
 
             <div>
 
-              <h2 className="font-bold text-lg">
+              <h2 className="font-bold text-base sm:text-lg">
 
                 AI Career Assistant 🤖
 
@@ -388,7 +388,7 @@ function Chatbot() {
           </div>
 
           {/* INPUT AREA */}
-          <div className="p-3 border-t dark:border-gray-700 bg-white dark:bg-gray-900 flex gap-2">
+          <div className="p-2 sm:p-3 border-t dark:border-gray-700 bg-white dark:bg-gray-900 flex gap-2">
 
             <input
               value={message}
@@ -400,14 +400,14 @@ function Chatbot() {
               onKeyDown={
                 handleKeyDown
               }
-              className="border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-3 rounded-lg flex-1 outline-none"
+              className="border dark:border-gray-600 dark:bg-gray-700 dark:text-white p-2 sm:p-3 rounded-lg flex-1 outline-none text-sm"
               placeholder="Ask anything..."
             />
 
             <button
               onClick={sendMessage}
               disabled={loading}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg transition text-sm"
             >
               Send
             </button>

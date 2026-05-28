@@ -282,16 +282,16 @@ function Home() {
 
       {/* NAVBAR */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 sticky top-0 z-50 shadow-sm">
-        <div className="w-full px-6 py-4 flex justify-between items-center">
+        <div className="w-full px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 
           {/* LEFT */}
           <div>
-            <h1 className="text-2xl font-bold tracking-wide">Welcome 👋</h1>
+            <h1 className="text-3xl sm:text-2xl font-bold tracking-wide">Welcome 👋</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">{name}</p>
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
 
             {/* DARK MODE */}
             <button
@@ -423,27 +423,27 @@ function Home() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="px-6 py-6">
+      <div className="px-4 sm:px-6 py-5 max-w-7xl mx-auto">
 
         {/* SEARCH & FILTERS */}
-        <div className="bg-white dark:bg-gray-900 rounded-xl p-5 shadow-sm mb-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 sm:p-5 shadow-sm mb-6">
           <input
             type="text"
             placeholder="Search jobs, skills, companies..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg px-4 py-3 outline-none mb-4"
+            className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-3 text-sm outline-none mb-4"
           />
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setView("grid")}
-              className={`px-4 py-2 rounded-lg ${view === "grid" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
+              className={`px-3 sm:px-4 py-2 text-sm rounded-lg ${view === "grid" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
             >
               Grid
             </button>
             <button
               onClick={() => setView("list")}
-              className={`px-4 py-2 rounded-lg ${view === "list" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
+              className={`px-3 sm:px-4 py-2 text-sm rounded-lg ${view === "list" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
             >
               List
             </button>
@@ -451,26 +451,26 @@ function Home() {
               <button
                 key={type}
                 onClick={() => setJobType(type)}
-                className={`px-4 py-2 rounded-lg ${jobType === type ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
+                className={`px-3 sm:px-4 py-2 text-sm rounded-lg ${jobType === type ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
               >
                 {type}
               </button>
             ))}
             <button
               onClick={() => setSort("salary-desc")}
-              className={`px-4 py-2 rounded-lg ${sort === "salary-desc" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
+              className={`px-3 sm:px-4 py-2 text-sm rounded-lg ${sort === "salary-desc" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
             >
               Salary ↓
             </button>
             <button
               onClick={() => setSort("salary-asc")}
-              className={`px-4 py-2 rounded-lg ${sort === "salary-asc" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
+              className={`px-3 sm:px-4 py-2 text-sm rounded-lg ${sort === "salary-asc" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-800"}`}
             >
               Salary ↑
             </button>
             <button
               onClick={() => { setSearch(""); setSort(""); setJobType("all"); }}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              className="bg-red-500 text-white px-3 sm:px-4 py-2 text-sm rounded-lg"
             >
               Clear
             </button>
@@ -481,7 +481,7 @@ function Home() {
         <div
           className={`gap-5 ${
             view === "grid"
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+              ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
               : "flex flex-col"
           }`}
         >
@@ -490,19 +490,19 @@ function Home() {
             return (
               <div
                 key={job._id}
-                className="bg-white dark:bg-gray-900 rounded-xl p-5 shadow-sm hover:shadow-lg transition"
+                className="bg-white dark:bg-gray-900 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-lg transition"
               >
-                <h2 className="text-xl font-semibold mb-2">{job.title}</h2>
-                <p className="text-gray-500 text-sm mb-2">📍 {job.location}</p>
-                <p className="text-green-600 font-bold text-lg mb-3">₹{job.salary}</p>
-                <p className="text-sm mb-4">{job.type}</p>
+                <h2 className="text-lg sm:text-xl font-semibold mb-2 leading-tight">{job.title}</h2>
+                <p className="text-gray-500 text-xs sm:text-sm mb-2">📍 {job.location}</p>
+                <p className="text-green-600 font-bold text-xl mb-2">₹{job.salary}</p>
+                <p className="text-sm mb-3">{job.type}</p>
 
                 {/* SKILLS */}
-                <div className="flex flex-wrap gap-2 mb-5">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {job.skills?.map((skill, i) => (
                     <span
                       key={i}
-                      className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-3 py-1 rounded-md text-xs"
+                      className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 px-2 py-1 rounded-md text-[11px] sm:text-xs"
                     >
                       {skill}
                     </span>
@@ -510,12 +510,12 @@ function Home() {
                 </div>
 
                 {/* BUTTONS */}
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col sm:flex-row gap-2">
                   {role === "user" && (
                     <>
                       <button
                         onClick={() => toggleBookmark(job._id)}
-                        className={`px-4 py-2 rounded-lg text-sm ${
+                        className={`px-3 py-2 rounded-lg text-sm w-full sm:w-auto ${
                           isBookmarked
                             ? "bg-yellow-400 text-black"
                             : "bg-gray-200 dark:bg-gray-800"
@@ -526,14 +526,14 @@ function Home() {
                       {appliedJobs.includes(job._id) ? (
                         <button
                           onClick={() => withdrawApplication(job._id)}
-                          className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm"
+                          className="bg-green-500 text-white px-3 sm:px-4 py-2 text-sm rounded-lg w-full sm:w-auto"
                         >
                           Withdraw
                         </button>
                       ) : (
                         <button
                           onClick={() => openApplyForm(job)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm"
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm w-full sm:w-auto"
                         >
                           Apply
                         </button>
@@ -543,7 +543,7 @@ function Home() {
                   {role === "admin" && (
                     <button
                       onClick={() => navigate(`/applicants/${job._id}`)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm w-full sm:w-auto"
                     >
                       View Applicants
                     </button>
@@ -556,11 +556,11 @@ function Home() {
 
         {/* PAGINATION */}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex flex-wrap justify-center gap-2 mt-8">
             <button
               onClick={() => handlePageChange(Math.max(page - 1, 1))}
               disabled={page === 1}
-              className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-800 disabled:opacity-40"
+              className="px-3 sm:px-4 py-2 text-sm rounded-lg bg-gray-200 dark:bg-gray-800 disabled:opacity-40"
             >
               ← Prev
             </button>
@@ -568,7 +568,7 @@ function Home() {
               <button
                 key={p}
                 onClick={() => handlePageChange(p)}
-                className={`px-4 py-2 rounded-lg ${
+                className={`px-4 py-2 text-sm rounded-lg ${
                   page === p
                     ? "bg-blue-600 text-white"
                     : "bg-gray-200 dark:bg-gray-800"
@@ -580,7 +580,7 @@ function Home() {
             <button
               onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
               disabled={page === totalPages}
-              className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-800 disabled:opacity-40"
+              className="px-4 py-2 text-sm rounded-lg bg-gray-200 dark:bg-gray-800 disabled:opacity-40"
             >
               Next →
             </button>
