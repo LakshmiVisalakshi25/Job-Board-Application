@@ -19,7 +19,6 @@ const Application = require('./models/Application');
 // ===============================
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
 const {
   GoogleGenerativeAI
@@ -47,31 +46,29 @@ const SECRET = process.env.JWT_SECRET || "mysecretkey";
 const otpStore = {};
 
 // ===============================
-// NODEMAILER
+// BREVO HTTP EMAIL SENDER
 // ===============================
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,           // ← changed from 2525 to 587 (more reliable)
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
-
-// ===============================
-// VERIFY MAILER ON STARTUP
-// ===============================
-transporter.verify((error, success) => {
-  if (error) {
-    console.log("❌ Mailer error:", error.message);
-  } else {
-    console.log("✅ Mailer is ready");
-  }
-});
+const sendEmail = async (to, subject, html) => {
+  const response = await axios.post(
+    "https://api.brevo.com/v3/smtp/email",
+    {
+      sender: {
+        name: "AI Job Portal",
+        email: process.env.EMAIL_USER
+      },
+      to: [{ email: to }],
+      subject: subject,
+      htmlContent: html
+    },
+    {
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+  return response;
+};
 
 // ===============================
 // MIDDLEWARE
@@ -527,11 +524,10 @@ app.post('/api/apply', async (req, res) => {
 
     // Send email — don't let email failure break the response
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "Application Submitted",
-        html: `
+      await sendEmail(
+        email,
+        "Application Submitted",
+        `
           <h2>Hello ${name}</h2>
           <p>You successfully applied for:</p>
           <h3>${job.title}</h3>
@@ -540,7 +536,7 @@ app.post('/api/apply', async (req, res) => {
           <br/>
           <p>AI Job Portal 🚀</p>
         `
-      });
+      );
     } catch (mailErr) {
       console.log("Apply email error:", mailErr.message);
     }
@@ -574,18 +570,17 @@ app.delete('/api/apply', async (req, res) => {
 
     // Send email — don't let email failure break the response
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: application.email,
-        subject: "Application Withdrawn",
-        html: `
+      await sendEmail(
+        application.email,
+        "Application Withdrawn",
+        `
           <h2>Hello ${application.name}</h2>
           <p>You withdrew your application for:</p>
           <h3>${job ? job.title : "the job"}</h3>
           <br/>
           <p>AI Job Portal</p>
         `
-      });
+      );
     } catch (mailErr) {
       console.log("Withdraw email error:", mailErr.message);
     }
@@ -686,8 +681,8 @@ ${jobsContext}`
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
-          "HTTP-Referer": "http://localhost:3000",   // ← required by OpenRouter
-          "X-Title": "AI Job Portal"                 // ← recommended by OpenRouter
+          "HTTP-Referer": "http://localhost:3000",
+          "X-Title": "AI Job Portal"
         }
       }
     );
@@ -719,7 +714,7 @@ ${jobsContext}`
 });
 
 // ===============================
-// SEND OTP  ← FIXED
+// SEND OTP
 // ===============================
 app.post("/api/send-otp", async (req, res) => {
 
@@ -727,56 +722,50 @@ app.post("/api/send-otp", async (req, res) => {
 
     const { email } = req.body;
 
-    // Validate input
     if (!email) {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    // Check user exists
     const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // Generate OTP
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false
     });
 
-    // Save OTP with expiry (10 minutes)
     otpStore[email] = {
       code: otp,
-      expiresAt: Date.now() + 10 * 60 * 1000   // ← OTP expires in 10 mins
+      expiresAt: Date.now() + 10 * 60 * 1000
     };
 
-    console.log(`OTP for ${email}: ${otp}`); // ← helpful for debugging
+    console.log(`OTP for ${email}: ${otp}`);
 
-    // Send email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Password Reset OTP",
-      html: `
+    await sendEmail(
+      email,
+      "Password Reset OTP",
+      `
         <h2>Your OTP Code</h2>
         <h1 style="letter-spacing: 8px;">${otp}</h1>
         <p>This OTP is valid for <b>10 minutes</b>.</p>
         <p>If you did not request this, ignore this email.</p>
       `
-    });
+    );
 
     res.json({ message: "OTP sent successfully" });
 
   } catch (err) {
-    console.log("Send OTP error:", err.message); // ← now shows exact error
+    console.log("Send OTP error:", err.message);
     res.status(500).json({ message: "Failed to send OTP: " + err.message });
   }
 });
 
 // ===============================
-// RESET PASSWORD  ← FIXED
+// RESET PASSWORD
 // ===============================
 app.post("/api/reset-password", async (req, res) => {
 
@@ -788,31 +777,25 @@ app.post("/api/reset-password", async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check OTP exists
     const storedOtp = otpStore[email];
 
     if (!storedOtp) {
       return res.status(400).json({ message: "OTP not found. Please request a new one." });
     }
 
-    // Check OTP expiry
     if (Date.now() > storedOtp.expiresAt) {
       delete otpStore[email];
       return res.status(400).json({ message: "OTP expired. Please request a new one." });
     }
 
-    // Verify OTP
     if (storedOtp.code !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update password
     await User.updateOne({ email }, { password: hashedPassword });
 
-    // Remove OTP
     delete otpStore[email];
 
     res.json({ message: "Password reset successful" });
@@ -944,12 +927,7 @@ app.put("/api/application-status", async (req, res) => {
 
     // Send email — don't let email failure break the response
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: `Application Status: ${status}`,
-        html: message
-      });
+      await sendEmail(email, `Application Status: ${status}`, message);
     } catch (mailErr) {
       console.log("Status email error:", mailErr.message);
     }
@@ -965,8 +943,8 @@ app.put("/api/application-status", async (req, res) => {
 // ===============================
 // START SERVER
 // ===============================
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
