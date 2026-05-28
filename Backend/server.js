@@ -53,7 +53,7 @@ const transporter = nodemailer.createTransport({
 
   host: "smtp-relay.brevo.com",
 
-  port: 587,
+  port: 2525,
 
   secure: false,
 
@@ -64,6 +64,12 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
 
   },
+
+  connectionTimeout: 10000,
+
+  greetingTimeout: 10000,
+
+  socketTimeout: 10000,
 
 });
 // ===============================
