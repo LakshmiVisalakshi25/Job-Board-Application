@@ -19,6 +19,9 @@ function Profile() {
   const role =
     localStorage.getItem("role");
 
+  const name =
+    localStorage.getItem("name");
+
   const navigate =
     useNavigate();
 
@@ -213,47 +216,65 @@ function Profile() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 dark:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:bg-gray-950 dark:text-white">
 
-      {/* HEADER */}
-      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 px-6 py-4 flex justify-between items-center">
+      {/* ===== NAVBAR ===== */}
+      <nav className="bg-white/80 backdrop-blur-md border-b border-indigo-100 dark:bg-gray-900/80 dark:border-gray-800 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
 
-        <div>
+          {/* BRAND */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center">
+              <span className="text-white text-sm font-bold">J</span>
+            </div>
+            <div className="hidden sm:block">
+              <p className="text-sm font-semibold leading-tight">JobBoard</p>
+              <p className="text-xs text-slate-400 dark:text-gray-500 leading-tight">{name}</p>
+            </div>
+          </div>
 
-          <h1 className="text-3xl font-bold">
+          {/* RIGHT ACTIONS */}
+          <div className="flex items-center gap-3">
 
-            My Profile
+            <button
+              onClick={() => navigate("/home")}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+            >
+              ← Back to Dashboard
+            </button>
 
-          </h1>
+            <button
+              onClick={() => {
+                localStorage.clear();
+                navigate("/login");
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+            >
+              Logout
+            </button>
 
-          <p className="text-gray-500 dark:text-gray-400">
-
-            Manage your profile
-
-          </p>
+          </div>
 
         </div>
-
-        {/* BACK */}
-        <button
-          onClick={() =>
-            navigate("/")
-          }
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-        >
-          Back
-        </button>
-
-      </div>
+      </nav>
 
       {/* MAIN */}
-      <div className="max-w-5xl mx-auto p-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden">
+        {/* PAGE HEADER */}
+        <div className="mb-6">
+          <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            My Profile
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            Manage your profile
+          </p>
+        </div>
 
-          {/* TOP SECTION */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-40">
+        <div className="bg-white/90 backdrop-blur-lg dark:bg-gray-900 rounded-3xl shadow-2xl border border-indigo-100 dark:border-gray-800 overflow-hidden">
 
+          {/* TOP BANNER */}
+          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 h-40">
           </div>
 
           {/* PROFILE CONTENT */}
@@ -265,24 +286,10 @@ function Profile() {
               <img
                 src={
                   form.profileImage ||
-
                   "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
                 }
                 alt="profile"
                 className="w-36 h-36 rounded-full border-4 border-white object-cover shadow-lg"
-              />
-
-              <input
-                type="text"
-                name="profileImage"
-                placeholder="Profile Image URL"
-                value={
-                  form.profileImage
-                }
-                onChange={
-                  handleChange
-                }
-                className="mt-4 border dark:border-gray-700 dark:bg-gray-800 px-4 py-2 rounded-lg w-full max-w-md"
               />
 
             </div>
@@ -293,10 +300,8 @@ function Profile() {
               {/* NAME */}
               <div>
 
-                <label className="font-semibold">
-
+                <label className="font-semibold text-slate-700 dark:text-slate-300">
                   Name
-
                 </label>
 
                 <input
@@ -304,7 +309,7 @@ function Profile() {
                   name="name"
                   value={form.name}
                   onChange={handleChange}
-                  className="w-full mt-2 border dark:border-gray-700 dark:bg-gray-800 p-3 rounded-lg"
+                  className="w-full mt-2 border border-indigo-100 dark:border-gray-700 dark:bg-gray-800 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
                 />
 
               </div>
@@ -312,22 +317,16 @@ function Profile() {
               {/* COLLEGE */}
               <div>
 
-                <label className="font-semibold">
-
+                <label className="font-semibold text-slate-700 dark:text-slate-300">
                   College
-
                 </label>
 
                 <input
                   type="text"
                   name="college"
-                  value={
-                    form.college
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="w-full mt-2 border dark:border-gray-700 dark:bg-gray-800 p-3 rounded-lg"
+                  value={form.college}
+                  onChange={handleChange}
+                  className="w-full mt-2 border border-indigo-100 dark:border-gray-700 dark:bg-gray-800 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
                 />
 
               </div>
@@ -335,22 +334,16 @@ function Profile() {
               {/* GITHUB */}
               <div>
 
-                <label className="font-semibold">
-
+                <label className="font-semibold text-slate-700 dark:text-slate-300">
                   GitHub
-
                 </label>
 
                 <input
                   type="text"
                   name="github"
-                  value={
-                    form.github
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="w-full mt-2 border dark:border-gray-700 dark:bg-gray-800 p-3 rounded-lg"
+                  value={form.github}
+                  onChange={handleChange}
+                  className="w-full mt-2 border border-indigo-100 dark:border-gray-700 dark:bg-gray-800 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
                 />
 
               </div>
@@ -358,22 +351,16 @@ function Profile() {
               {/* LINKEDIN */}
               <div>
 
-                <label className="font-semibold">
-
+                <label className="font-semibold text-slate-700 dark:text-slate-300">
                   LinkedIn
-
                 </label>
 
                 <input
                   type="text"
                   name="linkedin"
-                  value={
-                    form.linkedin
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="w-full mt-2 border dark:border-gray-700 dark:bg-gray-800 p-3 rounded-lg"
+                  value={form.linkedin}
+                  onChange={handleChange}
+                  className="w-full mt-2 border border-indigo-100 dark:border-gray-700 dark:bg-gray-800 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
                 />
 
               </div>
@@ -383,20 +370,16 @@ function Profile() {
             {/* BIO */}
             <div className="mt-6">
 
-              <label className="font-semibold">
-
+              <label className="font-semibold text-slate-700 dark:text-slate-300">
                 Bio
-
               </label>
 
               <textarea
                 rows="4"
                 name="bio"
                 value={form.bio}
-                onChange={
-                  handleChange
-                }
-                className="w-full mt-2 border dark:border-gray-700 dark:bg-gray-800 p-3 rounded-lg"
+                onChange={handleChange}
+                className="w-full mt-2 border border-indigo-100 dark:border-gray-700 dark:bg-gray-800 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
               />
 
             </div>
@@ -404,23 +387,17 @@ function Profile() {
             {/* SKILLS */}
             <div className="mt-6">
 
-              <label className="font-semibold">
-
+              <label className="font-semibold text-slate-700 dark:text-slate-300">
                 Skills
-
               </label>
 
               <input
                 type="text"
                 name="skills"
                 placeholder="React, Node.js, MongoDB"
-                value={
-                  form.skills
-                }
-                onChange={
-                  handleChange
-                }
-                className="w-full mt-2 border dark:border-gray-700 dark:bg-gray-800 p-3 rounded-lg"
+                value={form.skills}
+                onChange={handleChange}
+                className="w-full mt-2 border border-indigo-100 dark:border-gray-700 dark:bg-gray-800 p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition"
               />
 
             </div>
@@ -429,11 +406,9 @@ function Profile() {
             <div className="mt-8">
 
               <button
-                onClick={
-                  handleSave
-                }
+                onClick={handleSave}
                 disabled={saving}
-                className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl text-lg"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white px-8 py-3 rounded-xl text-lg font-medium transition"
               >
                 {saving
                   ? "Saving..."

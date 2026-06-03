@@ -502,11 +502,28 @@ app.post('/api/apply', async (req, res) => {
       phone, address, percentage, resume, photo
     } = req.body;
 
-    const existing = await Application.findOne({ userId, jobId });
+    const existing = await Application.findOne({
+  userId,
+  jobId
+});
 
-    if (existing) {
-      return res.json({ message: "Already applied" });
-    }
+if (
+  existing &&
+  existing.status !== "Rejected"
+) {
+  return res.status(400).json({
+    message: "Already applied"
+  });
+}
+
+if (
+  existing &&
+  existing.status === "Rejected"
+) {
+  await Application.deleteOne({
+    _id: existing._id
+  });
+}
 
     const job = await Job.findById(jobId);
 

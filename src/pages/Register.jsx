@@ -85,14 +85,32 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex justify-center items-center p-6 transition duration-300">
 
-      <div className="bg-white shadow-lg rounded-xl p-6 w-full max-w-md">
+      <div className="bg-white/90 backdrop-blur-lg shadow-2xl border border-indigo-100 rounded-3xl p-8 w-full max-w-md">
 
         {/* Heading */}
-        <h2 className="text-3xl font-bold mb-6 text-center">
-          Register
+        <h2 className="text-3xl font-bold mb-2 text-center dark:text-white">
+          Job Portal
         </h2>
+
+        {/* Back + Subtitle */}
+        <div className="flex justify-between items-center mb-6">
+          <button
+            onClick={() => navigate("/")}
+            className="text-indigo-600 hover:text-indigo-800 font-semibold transition"
+          >
+            ← Back to Home
+          </button>
+
+          <span className="text-sm text-gray-500">
+            Create Account ✨
+          </span>
+        </div>
+
+        <p className="text-center text-gray-600 mb-6">
+          Register to continue
+        </p>
 
         {/* Name */}
         <input
@@ -101,7 +119,7 @@ function Register() {
           placeholder="Enter name"
           value={form.name}
           onChange={handleChange}
-          className="border p-3 mb-4 rounded w-full"
+          className="border p-3 mb-4 rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
 
         {/* Email */}
@@ -111,7 +129,7 @@ function Register() {
           placeholder="Enter email"
           value={form.email}
           onChange={handleChange}
-          className="border p-3 mb-4 rounded w-full"
+          className="border p-3 mb-4 rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
 
         {/* Password */}
@@ -121,28 +139,28 @@ function Register() {
           placeholder="Enter password"
           value={form.password}
           onChange={handleChange}
-          className="border p-3 mb-4 rounded w-full"
+          className="border p-3 mb-4 rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
         />
 
         {/* Register Button */}
         <button
           onClick={handleRegister}
           disabled={loading}
-          className="bg-green-500 hover:bg-green-600 text-white w-full py-3 rounded"
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white w-full py-3 rounded-xl transition"
         >
           {loading
             ? "Registering..."
             : "Register"}
         </button>
 
-        {/* Login */}
-        <p className="text-center mt-4 text-sm">
+        {/* Login Link */}
+        <p className="text-center mt-5 text-sm dark:text-gray-300">
 
           Already have an account?{" "}
 
           <span
             onClick={() => navigate("/login")}
-            className="text-blue-500 cursor-pointer"
+            className="text-indigo-600 cursor-pointer hover:underline"
           >
             Login
           </span>

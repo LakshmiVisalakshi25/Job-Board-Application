@@ -17,6 +17,7 @@ import Applicants from "./pages/Applicants";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
+import LandingPage from "./pages/LandingPage";
 function App() {
 
   // ===============================
@@ -75,11 +76,14 @@ function App() {
       <BrowserRouter>
 
         <Routes>
-
           <Route
-            path="/"
-            element={<Home />}
-          />
+  path="/"
+  element={<LandingPage />}
+/>
+          <Route
+  path="/home"
+  element={<Home />}
+/>
 
           <Route
             path="/tracker"

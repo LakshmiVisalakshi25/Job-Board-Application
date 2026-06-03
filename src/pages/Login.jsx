@@ -120,7 +120,7 @@ function Login() {
           "Login successful ✅"
         );
 
-        navigate("/");
+        navigate("/home");
 
       } catch (err) {
 
@@ -285,17 +285,28 @@ function Login() {
 
   return (
 
-    <div className="min-h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900 p-6 transition duration-300">
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-indigo-50 to-purple-100 dark:bg-gray-900 p-6 transition duration-300">
 
-      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 w-full max-w-md">
+      <div className="bg-white/90 backdrop-blur-lg shadow-2xl border border-indigo-100 dark:bg-gray-800 rounded-3xl p-8 w-full max-w-md">
 
         {/* HEADING */}
         <h2 className="text-3xl font-bold mb-2 text-center dark:text-white">
 
-          AI Job Portal
+        Job Portal
 
         </h2>
+        <div className="flex justify-between items-center mb-6">
+  <button
+    onClick={() => navigate("/")}
+    className="text-indigo-600 hover:text-indigo-800 font-semibold transition"
+  >
+    ← Back to Home
+  </button>
 
+  <span className="text-sm text-gray-500">
+    Welcome Back 👋
+  </span>
+</div>
         <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
 
           Login to continue
@@ -303,29 +314,27 @@ function Login() {
         </p>
 
         {/* DEMO */}
-        <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg mb-5">
+        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 p-4 rounded-xl mb-5 shadow-md">
 
-          <p className="font-bold mb-2 dark:text-white">
+  <p className="font-bold text-lg mb-2 text-gray-900 dark:text-white">
+    🎯 Demo Credentials
+  </p>
 
-            Demo Credentials
+  <p className="text-sm text-gray-700 dark:text-gray-200 mb-1">
+    <span className="font-semibold text-blue-600 dark:text-blue-400">
+      User:
+    </span>{" "}
+    user@test.com / user123
+  </p>
 
-          </p>
+  <p className="text-sm text-gray-700 dark:text-gray-200">
+    <span className="font-semibold text-green-600 dark:text-green-400">
+      Admin:
+    </span>{" "}
+    admin@test.com / admin123
+  </p>
 
-          <p className="text-sm dark:text-gray-200">
-
-            User:
-            user@test.com / user123
-
-          </p>
-
-          <p className="text-sm dark:text-gray-200">
-
-            Admin:
-            admin@test.com / admin123
-
-          </p>
-
-        </div>
+</div>
 
         {/* DEMO BUTTONS */}
         <div className="flex gap-2 mb-5">
@@ -341,7 +350,7 @@ function Login() {
                 "user123"
               );
             }}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded w-full"
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white px-3 py-2 rounded w-full"
           >
             Demo User
           </button>
@@ -397,7 +406,7 @@ function Login() {
             onClick={() =>
               setShowForgot(true)
             }
-            className="text-blue-500 text-sm hover:underline"
+            className="text-indigo-600 text-sm hover:underline"
           >
             Forgot Password?
           </button>
@@ -408,7 +417,7 @@ function Login() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="bg-blue-500 hover:bg-blue-600 text-white w-full py-3 rounded-lg transition"
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white w-full py-3 rounded-xl transition"
         >
 
           {loading
@@ -420,13 +429,13 @@ function Login() {
         {/* REGISTER */}
         <p className="text-center mt-5 text-sm dark:text-gray-300">
 
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
 
           <span
             onClick={() =>
               navigate("/register")
             }
-            className="text-blue-500 cursor-pointer hover:underline"
+            className="text-indigo-600 cursor-pointer hover:underline"
           >
             Register
           </span>
@@ -440,7 +449,7 @@ function Login() {
 
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-5">
 
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl w-full max-w-md">
+          <div className="bg-white/90 backdrop-blur-lg shadow-2xl border border-indigo-100 dark:bg-gray-800 p-6 rounded-3xl w-full max-w-md">
 
             <h2 className="text-2xl font-bold mb-5 dark:text-white">
 
@@ -466,7 +475,7 @@ function Login() {
 
               <button
                 onClick={sendOtp}
-                className="bg-blue-500 text-white w-full py-3 rounded-lg mb-3"
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white w-full py-3 rounded-xl mb-3"
               >
                 Send OTP
               </button>
@@ -506,7 +515,7 @@ function Login() {
                   onClick={
                     resetPassword
                   }
-                  className="bg-green-500 text-white w-full py-3 rounded-lg mb-3"
+                  className="bg-green-500 text-white w-full py-3 rounded-xl mb-3"
                 >
                   Reset Password
                 </button>
@@ -528,7 +537,7 @@ function Login() {
                 );
 
               }}
-              className="bg-red-500 text-white w-full py-3 rounded-lg"
+              className="bg-red-500 text-white w-full py-3 rounded-xl"
             >
               Close
             </button>

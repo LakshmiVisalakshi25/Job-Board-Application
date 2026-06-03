@@ -156,7 +156,7 @@ function Applicants() {
 
         <button
           onClick={() =>
-            navigate("/")
+            navigate("/home")
           }
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
         >
@@ -185,7 +185,7 @@ function Applicants() {
           {applications.map((app, i) => (
 
             <div
-              key={i}
+              key={app._id || i}
               className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 transition hover:shadow-xl"
             >
 
@@ -281,89 +281,71 @@ function Applicants() {
               </a>
 
               {/* ACTION BUTTONS */}
-              <div className="grid grid-cols-2 gap-3">
 
-                {/* SHORTLIST */}
-                <button
-                  onClick={() =>
-                    updateStatus(
+              {/* ACTION BUTTONS */}
 
-                      app._id,
+{app.status === "Pending" ? (
 
-                      "Shortlisted",
+  <div className="grid grid-cols-2 gap-3">
 
-                      app.email,
+    <button
+      onClick={() =>
+        updateStatus(
+          app._id,
+          "Shortlisted",
+          app.email,
+          app.name
+        )
+      }
+      className="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg"
+    >
+      Shortlist
+    </button>
 
-                      app.name
+    <button
+      onClick={() =>
+        updateStatus(
+          app._id,
+          "Rejected",
+          app.email,
+          app.name
+        )
+      }
+      className="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
+    >
+      Reject
+    </button>
 
-                    )
-                  }
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg"
-                >
-                  Shortlist
-                </button>
+    <button
+      onClick={() =>
+        updateStatus(
+          app._id,
+          "Selected",
+          app.email,
+          app.name
+        )
+      }
+      className="bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg col-span-2"
+    >
+      Select
+    </button>
 
-                {/* REJECT */}
-                <button
-                  onClick={() =>
-                    updateStatus(
+  </div>
 
-                      app._id,
+) : (
 
-                      "Rejected",
+  <div className="mt-3">
 
-                      app.email,
+    <span
+      className={`${getStatusColor(app.status)}
+      text-white px-4 py-2 rounded-lg inline-block`}
+    >
+      Final Status: {app.status}
+    </span>
 
-                      app.name
+  </div>
 
-                    )
-                  }
-                  className="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
-                >
-                  Reject
-                </button>
-
-                {/* SELECT */}
-                <button
-                  onClick={() =>
-                    updateStatus(
-
-                      app._id,
-
-                      "Selected",
-
-                      app.email,
-
-                      app.name
-
-                    )
-                  }
-                  className="bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg"
-                >
-                  Select
-                </button>
-
-                {/* PENDING */}
-                <button
-                  onClick={() =>
-                    updateStatus(
-
-                      app._id,
-
-                      "Pending",
-
-                      app.email,
-
-                      app.name
-
-                    )
-                  }
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg"
-                >
-                  Pending
-                </button>
-
-              </div>
+)}
 
             </div>
 

@@ -210,48 +210,64 @@ function Home() {
   // SUBMIT APPLICATION
   // =====================================
   const submitApplication = async () => {
+
     if (
-      !formData.name ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.address ||
-      !formData.percentage ||
-      !formData.resume
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.address.trim() ||
+      !formData.percentage.trim() ||
+      !formData.resume.trim()
     ) {
       alert("Please fill all fields");
       return;
     }
 
     try {
-      const res = await fetch("https://job-board-backend-755o.onrender.com/api/apply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, jobId: selectedJob._id, ...formData }),
-      });
-      const data = await res.json();
-      alert(data.message);
-      setAppliedJobs([...appliedJobs, selectedJob._id]);
-      setShowForm(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
-  // =====================================
-  // WITHDRAW
-  // =====================================
-  const withdrawApplication = async (jobId) => {
-    try {
-      const res = await fetch("https://job-board-backend-755o.onrender.com/api/apply", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, jobId }),
-      });
+      const res = await fetch(
+        "https://job-board-backend-755o.onrender.com/api/apply",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            jobId: selectedJob._id,
+            ...formData,
+          }),
+        }
+      );
+
       const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
+
       alert(data.message);
-      setAppliedJobs(appliedJobs.filter((id) => id !== jobId));
+
+      setAppliedJobs([
+        ...appliedJobs,
+        selectedJob._id,
+      ]);
+
+      setShowForm(false);
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        percentage: "",
+        resume: "",
+      });
+
     } catch (err) {
       console.log(err);
+      alert("Something went wrong");
     }
   };
 
@@ -282,15 +298,15 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-gray-950 dark:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-black dark:text-white">
 
       {/* ===== NAVBAR ===== */}
-      <nav className="bg-white dark:bg-gray-900 border-b border-slate-200 dark:border-gray-800 sticky top-0 z-50">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-indigo-100 dark:bg-gray-900/80 dark:border-gray-800 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
 
           {/* BRAND */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center flex-shrink-0">
               <span className="text-white text-sm font-bold">J</span>
             </div>
             <div className="min-w-0 hidden sm:block">
@@ -301,6 +317,12 @@ function Home() {
 
           {/* RIGHT ACTIONS */}
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/")}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+            >
+              🏠 Home
+            </button>
 
             {/* DARK MODE */}
             <button
@@ -339,44 +361,74 @@ function Home() {
               </div>
             )}
 
-            {/* NOTIFICATIONS */}
-            <div className="relative">
-              <button
-                onClick={handleNotificationClick}
-                className="relative w-9 h-9 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <span className="text-base">🔔</span>
-                {unreadNotifications.length > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
-                    {unreadNotifications.length}
-                  </span>
-                )}
-              </button>
+            {role === "user" && (
+              <div className="relative">
 
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden z-50">
-                  <div className="px-4 py-3 border-b border-slate-100 dark:border-gray-800">
-                    <h3 className="font-semibold text-sm">Notifications</h3>
+                <button
+                  onClick={handleNotificationClick}
+                  className="relative w-9 h-9 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <span className="text-base">🔔</span>
+
+                  {unreadNotifications.length > 0 && (
+                    <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center leading-none">
+                      {unreadNotifications.length}
+                    </span>
+                  )}
+                </button>
+
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 border border-indigo-100 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden z-50">
+
+                    <div className="px-4 py-3 border-b border-slate-100 dark:border-gray-800">
+                      <h3 className="font-semibold text-sm">
+                        Notifications
+                      </h3>
+                    </div>
+
+                    <div className="max-h-80 overflow-y-auto">
+
+                      {notifications.length === 0 ? (
+
+                        <p className="text-sm text-slate-400 dark:text-gray-500 text-center py-8">
+                          No notifications yet
+                        </p>
+
+                      ) : (
+
+                        notifications.map((n, i) => (
+
+                          <div
+                            key={i}
+                            className="flex items-start gap-3 px-4 py-3 border-b border-slate-50 dark:border-gray-800 last:border-0"
+                          >
+
+                            <span
+                              className={`mt-0.5 px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${
+                                statusColors[n.status] ||
+                                "bg-slate-100 text-slate-600"
+                              }`}
+                            >
+                              {n.status}
+                            </span>
+
+                            <p className="text-sm text-slate-500 dark:text-gray-400">
+                              Your application status was updated
+                            </p>
+
+                          </div>
+
+                        ))
+
+                      )}
+
+                    </div>
+
                   </div>
-                  <div className="max-h-80 overflow-y-auto">
-                    {notifications.length === 0 ? (
-                      <p className="text-sm text-slate-400 dark:text-gray-500 text-center py-8">No notifications yet</p>
-                    ) : (
-                      notifications.map((n, i) => (
-                        <div key={i} className="flex items-start gap-3 px-4 py-3 border-b border-slate-50 dark:border-gray-800 last:border-0">
-                          <span className={`mt-0.5 px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${statusColors[n.status] || "bg-slate-100 text-slate-600"}`}>
-                            {n.status}
-                          </span>
-                          <p className="text-sm text-slate-500 dark:text-gray-400">
-                            Your application status was updated
-                          </p>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
+
+              </div>
+            )}
 
             {/* PROFILE MENU */}
             <div className="relative">
@@ -392,8 +444,8 @@ function Home() {
               </button>
 
               {showProfile && (
-                <div className="absolute right-0 top-12 w-52 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden">
-                  <div className="px-4 py-3 bg-slate-50 dark:bg-gray-800 border-b border-slate-100 dark:border-gray-700">
+                <div className="absolute right-0 top-12 w-52 bg-white dark:bg-gray-900 border border-indigo-100 dark:border-gray-700 rounded-xl shadow-xl z-50 overflow-hidden">
+                  <div className="px-4 py-3 bg-indigo-50 dark:bg-gray-800 border-b border-indigo-100 dark:border-gray-700">
                     <p className="font-semibold text-sm truncate">{name}</p>
                     <p className="text-xs text-slate-400 dark:text-gray-500 capitalize">{role}</p>
                   </div>
@@ -405,12 +457,12 @@ function Home() {
                     <button
                       key={i}
                       onClick={item.action}
-                      className="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors"
+                      className="w-full text-left px-4 py-2.5 text-sm hover:bg-indigo-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       {item.label}
                     </button>
                   ))}
-                  <div className="border-t border-slate-100 dark:border-gray-700">
+                  <div className="border-t border-indigo-100 dark:border-gray-700">
                     <button
                       onClick={() => { setShowProfile(false); handleLogout(); }}
                       className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -431,14 +483,16 @@ function Home() {
 
         {/* PAGE HEADER */}
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Welcome back, {name?.split(" ")[0]} 👋</h1>
+          <h1 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Welcome Back, {name?.split(" ")[0]} 👋
+          </h1>
           <p className="text-slate-500 dark:text-gray-400 text-sm mt-1">
             {filteredJobs.length} job{filteredJobs.length !== 1 ? "s" : ""} available
           </p>
         </div>
 
         {/* ===== SEARCH & FILTERS ===== */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 p-4 mb-6 space-y-3">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-indigo-100 dark:border-gray-800 p-4 mb-6 space-y-3 shadow-sm">
 
           {/* SEARCH */}
           <div className="relative">
@@ -481,7 +535,7 @@ function Home() {
                 onClick={() => setJobType(type)}
                 className={`flex-shrink-0 px-3 py-1.5 text-xs rounded-lg font-medium transition-all border ${
                   jobType === type
-                    ? "bg-indigo-600 text-white border-indigo-600"
+                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-indigo-600"
                     : "bg-white dark:bg-gray-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-gray-700 hover:border-indigo-300"
                 }`}
               >
@@ -501,7 +555,7 @@ function Home() {
                 onClick={() => setSort(key)}
                 className={`flex-shrink-0 px-3 py-1.5 text-xs rounded-lg font-medium transition-all border ${
                   sort === key
-                    ? "bg-indigo-600 text-white border-indigo-600"
+                    ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-indigo-600"
                     : "bg-white dark:bg-gray-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-gray-700 hover:border-indigo-300"
                 }`}
               >
@@ -543,7 +597,7 @@ function Home() {
               return (
                 <div
                   key={job._id}
-                  className={`group bg-white dark:bg-gray-900 rounded-2xl border border-slate-200 dark:border-gray-800 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md transition-all duration-200 ${
+                  className={`group bg-white dark:bg-gray-900 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-indigo-100 dark:border-gray-800 hover:border-indigo-300 dark:hover:border-indigo-700 ${
                     view === "list" ? "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5" : "p-5 flex flex-col"
                   }`}
                 >
@@ -599,15 +653,15 @@ function Home() {
                         </button>
                         {isApplied ? (
                           <button
-                            onClick={() => withdrawApplication(job._id)}
-                            className="flex-1 sm:flex-none px-3 py-2 text-sm rounded-xl font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 hover:bg-red-50 hover:text-red-600 hover:border-red-300 dark:hover:bg-red-900/30 dark:hover:text-red-400 dark:hover:border-red-700 transition-all"
+                            disabled
+                            className="flex-1 sm:flex-none px-3 py-2 text-sm rounded-xl font-medium bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-not-allowed"
                           >
                             ✓ Applied
                           </button>
                         ) : (
                           <button
                             onClick={() => openApplyForm(job)}
-                            className="flex-1 sm:flex-none px-3 py-2 text-sm rounded-xl font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
+                            className="flex-1 sm:flex-none px-3 py-2 text-sm rounded-xl font-medium bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white transition-all"
                           >
                             Apply →
                           </button>
@@ -617,7 +671,7 @@ function Home() {
                     {role === "admin" && (
                       <button
                         onClick={() => navigate(`/applicants/${job._id}`)}
-                        className="flex-1 px-3 py-2 text-sm rounded-xl font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
+                        className="flex-1 px-3 py-2 text-sm rounded-xl font-medium bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white transition-all"
                       >
                         View Applicants
                       </button>
@@ -635,7 +689,7 @@ function Home() {
             <button
               onClick={() => handlePageChange(Math.max(page - 1, 1))}
               disabled={page === 1}
-              className="px-3 py-2 text-sm rounded-lg bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors"
+              className="px-3 py-2 text-sm rounded-lg bg-white dark:bg-gray-900 border border-indigo-100 dark:border-gray-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-indigo-50 dark:hover:bg-gray-800 transition-colors"
             >
               ←
             </button>
@@ -652,8 +706,8 @@ function Home() {
                   onClick={() => handlePageChange(p)}
                   className={`w-9 h-9 text-sm rounded-lg font-medium transition-colors ${
                     page === p
-                      ? "bg-indigo-600 text-white"
-                      : "bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-gray-800"
+                      ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white"
+                      : "bg-white dark:bg-gray-900 border border-indigo-100 dark:border-gray-700 text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-gray-800"
                   }`}
                 >
                   {p}
@@ -664,7 +718,7 @@ function Home() {
             <button
               onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
               disabled={page === totalPages}
-              className="px-3 py-2 text-sm rounded-lg bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors"
+              className="px-3 py-2 text-sm rounded-lg bg-white dark:bg-gray-900 border border-indigo-100 dark:border-gray-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 hover:bg-indigo-50 dark:hover:bg-gray-800 transition-colors"
             >
               →
             </button>
@@ -679,9 +733,9 @@ function Home() {
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4"
           onClick={(e) => e.target === e.currentTarget && setShowForm(false)}
         >
-          <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-3xl shadow-2xl border border-indigo-100 overflow-hidden">
             {/* MODAL HEADER */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-gray-800">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-indigo-100 dark:border-gray-800">
               <div>
                 <h2 className="text-base font-semibold">Apply for Position</h2>
                 <p className="text-sm text-slate-500 dark:text-gray-400 mt-0.5">{selectedJob?.title}</p>
@@ -716,7 +770,7 @@ function Home() {
             </div>
 
             {/* MODAL FOOTER */}
-            <div className="flex gap-3 px-6 py-4 border-t border-slate-100 dark:border-gray-800">
+            <div className="flex gap-3 px-6 py-4 border-t border-indigo-100 dark:border-gray-800">
               <button
                 onClick={() => setShowForm(false)}
                 className="flex-1 py-2.5 text-sm rounded-xl font-medium bg-slate-100 dark:bg-gray-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors"
@@ -725,7 +779,7 @@ function Home() {
               </button>
               <button
                 onClick={submitApplication}
-                className="flex-1 py-2.5 text-sm rounded-xl font-medium bg-indigo-600 hover:bg-indigo-700 text-white transition-colors"
+                className="flex-1 py-2.5 text-sm rounded-xl font-medium bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 text-white transition-all"
               >
                 Submit Application
               </button>
