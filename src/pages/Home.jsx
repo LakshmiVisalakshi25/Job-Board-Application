@@ -165,9 +165,13 @@ function Home() {
   // LOGOUT
   // =====================================
   const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
-  };
+  const readNotifs = localStorage.getItem("readNotifs");
+  localStorage.clear();
+  if (readNotifs) {
+    localStorage.setItem("readNotifs", readNotifs);
+  }
+  navigate("/login");
+};
 
   // =====================================
   // BOOKMARK
@@ -275,15 +279,23 @@ function Home() {
   // NOTIFICATIONS
   // =====================================
   const unreadNotifications = notifications.filter(
-    (n) => !readNotifications.includes(n._id)
+    (n) =>
+      !readNotifications.includes(
+        `${n._id}-${n.status}`
+      )
   );
+const handleNotificationClick = () => {
+  const isOpening = !showNotifications;
+  setShowNotifications(isOpening);
 
-  const handleNotificationClick = () => {
-    setShowNotifications(!showNotifications);
-    const ids = notifications.map((n) => n._id);
+  if (isOpening) {
+    const ids = notifications.map(
+      (n) => `${n._id}-${n.status}`
+    );
     setReadNotifications(ids);
     localStorage.setItem("readNotifs", JSON.stringify(ids));
-  };
+  }
+};
 
   const statusColors = {
     Shortlisted: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200",
