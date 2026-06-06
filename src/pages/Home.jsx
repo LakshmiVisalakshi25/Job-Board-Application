@@ -24,8 +24,8 @@ function Home() {
   const [showProfile, setShowProfile] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // NEW
-  const [resumeError, setResumeError] = useState(""); // NEW
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [resumeError, setResumeError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -201,12 +201,11 @@ function Home() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // CLEAR RESUME ERROR WHEN USER TYPES
     if (e.target.name === "resume") setResumeError("");
   };
 
   // =====================================
-  // RESUME URL VALIDATION — NEW
+  // RESUME URL VALIDATION
   // =====================================
   const isValidResumeUrl = (url) => {
     return (
@@ -232,7 +231,6 @@ function Home() {
       return;
     }
 
-    // RESUME VALIDATION — NEW
     if (!isValidResumeUrl(formData.resume.trim())) {
       setResumeError("Resume link must be a Google Drive or Dropbox URL.");
       return;
@@ -433,10 +431,9 @@ function Home() {
             </div>
           </div>
 
-          {/* MOBILE RIGHT — only bell + hamburger */}
+          {/* MOBILE RIGHT — bell + hamburger */}
           <div className="flex sm:hidden items-center gap-2">
 
-            {/* NOTIFICATION BELL — mobile */}
             {role === "user" && (
               <div className="relative">
                 <button
@@ -475,7 +472,7 @@ function Home() {
               </div>
             )}
 
-            {/* HAMBURGER BUTTON */}
+            {/* HAMBURGER */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors text-slate-600 dark:text-slate-300"
@@ -497,8 +494,6 @@ function Home() {
         {/* MOBILE MENU DROPDOWN */}
         {mobileMenuOpen && (
           <div className="sm:hidden border-t border-indigo-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-3 space-y-2">
-
-            {/* USER INFO */}
             <div className="flex items-center gap-3 px-2 py-2 mb-1">
               <img
                 src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
@@ -513,7 +508,6 @@ function Home() {
 
             <div className="h-px bg-slate-100 dark:bg-gray-800" />
 
-            {/* NAV LINKS */}
             <button
               onClick={() => { setMobileMenuOpen(false); navigate("/"); }}
               className="w-full text-left px-3 py-2.5 text-sm rounded-lg hover:bg-indigo-50 dark:hover:bg-gray-800 transition-colors"
@@ -683,6 +677,8 @@ function Home() {
                   }`}
                 >
                   <div className={view === "list" ? "flex-1 min-w-0" : "flex-1"}>
+
+                    {/* TITLE + BADGE */}
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <h2 className="text-base font-semibold leading-snug group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                         {job.title}
@@ -694,16 +690,18 @@ function Home() {
                       )}
                     </div>
 
-                    {/* COMPANY NAME — NEW */}
+                    {/* COMPANY */}
                     {job.company && (
                       <p className="text-xs text-slate-400 dark:text-gray-500 mb-2">@ {job.company}</p>
                     )}
 
+                    {/* LOCATION + SALARY */}
                     <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-gray-400 mb-3">
                       <span>📍 {job.location}</span>
                       <span className="text-emerald-600 dark:text-emerald-400 font-semibold">₹{job.salary?.toLocaleString()}</span>
                     </div>
 
+                    {/* SKILLS */}
                     <div className="flex flex-wrap gap-1.5">
                       {job.skills?.slice(0, 4).map((skill, i) => (
                         <span key={i} className="bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 px-2.5 py-0.5 rounded-md text-xs font-medium">
@@ -716,8 +714,17 @@ function Home() {
                         </span>
                       )}
                     </div>
+
+                    {/* DESCRIPTION PREVIEW */}
+                    {job.description && (
+                      <p className="text-xs text-slate-400 dark:text-gray-500 mt-3 leading-relaxed line-clamp-2">
+                        {job.description}
+                      </p>
+                    )}
+
                   </div>
 
+                  {/* ACTIONS */}
                   <div className={`flex gap-2 ${view === "list" ? "flex-shrink-0 sm:flex-col sm:w-36" : "mt-4"}`}>
                     {role === "user" && (
                       <>
@@ -817,7 +824,7 @@ function Home() {
                 <p className="text-sm text-slate-500 dark:text-gray-400 mt-0.5">{selectedJob?.title}</p>
               </div>
               <button
-                onClick={() => setShowForm(false)}
+                onClick={() => { setShowForm(false); setResumeError(""); }}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
               >
                 ✕
@@ -826,10 +833,10 @@ function Home() {
 
             <div className="px-6 py-4 space-y-3 max-h-[60vh] overflow-y-auto">
               {[
-                { name: "name", placeholder: "Full name", type: "text" },
-                { name: "email", placeholder: "Email address", type: "email" },
-                { name: "phone", placeholder: "Phone number", type: "tel" },
-                { name: "address", placeholder: "Current address", type: "text" },
+                { name: "name",       placeholder: "Full name",               type: "text"   },
+                { name: "email",      placeholder: "Email address",           type: "email"  },
+                { name: "phone",      placeholder: "Phone number",            type: "tel"    },
+                { name: "address",    placeholder: "Current address",         type: "text"   },
                 { name: "percentage", placeholder: "Academic percentage (%)", type: "number" },
               ].map((field) => (
                 <input
@@ -843,7 +850,7 @@ function Home() {
                 />
               ))}
 
-              {/* RESUME FIELD WITH VALIDATION — NEW */}
+              {/* RESUME WITH VALIDATION */}
               <div>
                 <input
                   name="resume"
