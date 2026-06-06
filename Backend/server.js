@@ -66,13 +66,13 @@ const sendEmail = async (to, subject, html) => {
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"], // ADDED Authorization
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
 app.use(express.json());
 
 // ===============================
-// JWT MIDDLEWARE — NEW
+// JWT MIDDLEWARE
 // ===============================
 const verifyAdmin = (req, res, next) => {
   try {
@@ -214,6 +214,7 @@ const insertDefaultJobs = async () => {
 // ===============================
 // MONGODB CONNECTION
 // ===============================
+console.log("Mongo URI:", process.env.MONGO_URI);
 mongoose.connect(
   process.env.MONGO_URI ||
   'mongodb+srv://24a95a0517_db_user:Visalakshi%4025@cluster0.pjywmgu.mongodb.net/jobboard?retryWrites=true&w=majority'
@@ -229,6 +230,46 @@ mongoose.connect(
 // ===============================
 app.get('/', (req, res) => {
   res.send("Backend is running successfully 🚀");
+});
+
+// ===============================
+// ONE-TIME MIGRATION — REMOVE AFTER USE
+// ===============================
+app.get('/api/migrate-descriptions', async (req, res) => {
+  try {
+    const descriptions = {
+      "React Developer": "Build and maintain modern web applications using React. You will collaborate with designers and backend developers to deliver high-quality user interfaces. Strong understanding of component-based architecture required.",
+      "Node.js Developer": "Develop and maintain scalable server-side applications using Node.js and Express. Work with MongoDB databases and RESTful APIs. Experience with authentication and security best practices is a plus.",
+      "Full Stack Developer": "Design and develop full-stack web applications from frontend to backend. You will work across the entire tech stack using React, Node.js, and MongoDB. Strong problem-solving skills and attention to detail required.",
+      "Python Developer": "Develop backend services and APIs using Python and Django. Work with relational databases and write clean, maintainable code. Experience with REST APIs and SQL is essential.",
+      "Java Developer": "Build enterprise-grade applications using Java and Spring Boot. Collaborate with cross-functional teams to deliver robust backend systems. MySQL database knowledge and OOP concepts are required.",
+      "Frontend Developer": "Create beautiful, responsive, and performant user interfaces for Google's web products. You will work with cutting-edge frontend technologies and contribute to large-scale systems serving millions of users.",
+      "Backend Engineer": "Design and implement high-performance backend systems for Amazon's platform. You will work with distributed systems, AWS cloud services, and large-scale databases. Strong system design skills are essential.",
+      "Software Engineer": "Develop and maintain enterprise software solutions using C# and .NET. Leverage Azure cloud services to build scalable applications. Collaborate with global teams and contribute to Microsoft's product ecosystem.",
+      "Data Analyst": "Analyze large datasets to generate actionable business insights. Build dashboards and reports using Power BI and Excel. Strong SQL skills and experience with data visualization tools are required.",
+      "Machine Learning Engineer": "Design and deploy machine learning models to solve real-world business problems. Work with large datasets and deep learning frameworks like TensorFlow. A strong foundation in mathematics and statistics is essential.",
+      "DevOps Engineer": "Manage CI/CD pipelines and cloud infrastructure for IBM's enterprise products. Work with Docker, Kubernetes, and AWS to ensure high availability and scalability. Strong scripting and automation skills required.",
+      "UI/UX Designer": "Design intuitive and visually compelling user experiences for Adobe's suite of products. Conduct user research, create wireframes, and develop high-fidelity prototypes using Figma. A strong portfolio is required.",
+      "Cloud Engineer": "Architect and manage cloud infrastructure on AWS and Oracle Cloud. Ensure security, performance, and reliability of cloud-based systems. Linux administration and scripting experience are essential.",
+      "Android Developer": "Build and optimize Android applications used by millions of Paytm users. Work with Kotlin, Firebase, and REST APIs to deliver fast and reliable mobile experiences. Experience with Play Store deployment is a plus.",
+      "iOS Developer": "Develop feature-rich iOS applications for Zoho's product lineup. Work with Swift, UIKit, and Xcode to build high-performance mobile apps. Experience with App Store submission and Apple guidelines required.",
+      "Cyber Security Analyst": "Monitor, detect, and respond to security threats across HCL's infrastructure. Conduct vulnerability assessments and implement security controls. Strong knowledge of networking, Linux, and security frameworks required.",
+      "QA Engineer": "Design and execute automated and manual test cases for enterprise applications. Work with Selenium and testing frameworks to ensure software quality. Attention to detail and strong analytical skills are essential.",
+      "AI Engineer": "Research and develop cutting-edge AI systems and large language models at OpenAI. Work on training pipelines, evaluation frameworks, and deployment of AI models. A strong background in ML and Python is required.",
+      "Blockchain Developer": "Build decentralized applications and smart contracts on the Polygon blockchain. Work with Solidity, Web3.js, and DeFi protocols. Deep understanding of blockchain architecture and cryptography is required.",
+      "Game Developer": "Design and develop engaging game mechanics and systems using Unity and C#. Collaborate with artists and designers to bring game concepts to life. A passion for gaming and experience shipping titles is a big plus."
+    };
+
+    let updated = 0;
+    for (const [title, description] of Object.entries(descriptions)) {
+      const result = await Job.updateMany({ title }, { $set: { description } });
+      updated += result.modifiedCount;
+    }
+
+    res.json({ message: `✅ Updated ${updated} jobs with descriptions` });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 // ===============================
@@ -389,7 +430,6 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/apply', async (req, res) => {
   try {
     const { userId, jobId, name, email, phone, address, percentage, resume, photo } = req.body;
-
     const existing = await Application.findOne({ userId, jobId });
     if (existing && existing.status !== "Rejected") {
       return res.status(400).json({ message: "Already applied" });
@@ -397,17 +437,14 @@ app.post('/api/apply', async (req, res) => {
     if (existing && existing.status === "Rejected") {
       await Application.deleteOne({ _id: existing._id });
     }
-
     const job = await Job.findById(jobId);
     if (!job) return res.status(404).json({ message: "Job not found" });
-
     const application = new Application({
       userId, jobId, name, email,
       phone, address, percentage, resume, photo,
       status: "Pending"
     });
     await application.save();
-
     try {
       await sendEmail(
         email,
@@ -417,7 +454,6 @@ app.post('/api/apply', async (req, res) => {
     } catch (mailErr) {
       console.log("Apply email error:", mailErr.message);
     }
-
     res.json({ message: "Application submitted successfully" });
   } catch (err) {
     console.log("POST /api/apply error:", err.message);
@@ -435,7 +471,6 @@ app.delete('/api/apply', async (req, res) => {
     if (!application) return res.status(404).json({ message: "Application not found" });
     const job = await Job.findById(jobId);
     await Application.deleteOne({ userId, jobId });
-
     try {
       await sendEmail(
         application.email,
@@ -445,7 +480,6 @@ app.delete('/api/apply', async (req, res) => {
     } catch (mailErr) {
       console.log("Withdraw email error:", mailErr.message);
     }
-
     res.json({ message: "Application withdrawn" });
   } catch (err) {
     console.log("DELETE /api/apply error:", err.message);
@@ -486,7 +520,6 @@ app.post("/api/chatbot", async (req, res) => {
   try {
     const { message } = req.body;
     if (!message) return res.status(400).json({ reply: "Message is required", jobs: [] });
-
     const userMessage = message.toLowerCase();
     const jobs = await Job.find();
     const jobsContext = jobs.map(job => `
@@ -495,7 +528,6 @@ Company: ${job.company}
 Location: ${job.location}
 Skills: ${job.skills?.join(", ")}
     `).join("\n");
-
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
@@ -517,14 +549,12 @@ Skills: ${job.skills?.join(", ")}
         }
       }
     );
-
     const aiReply = response.data.choices[0].message.content;
     const shouldShowJobs =
       userMessage.includes("job") || userMessage.includes("developer") ||
       userMessage.includes("react") || userMessage.includes("python") ||
       userMessage.includes("java") || userMessage.includes("node") ||
       userMessage.includes("hiring") || userMessage.includes("opening");
-
     res.json({ reply: aiReply, jobs: shouldShowJobs ? jobs : [] });
   } catch (err) {
     console.log("Chatbot error:", err.response?.data || err.message);
@@ -541,7 +571,6 @@ app.post("/api/send-otp", async (req, res) => {
     if (!email) return res.status(400).json({ message: "Email is required" });
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
-
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
@@ -549,7 +578,6 @@ app.post("/api/send-otp", async (req, res) => {
     });
     otpStore[email] = { code: otp, expiresAt: Date.now() + 10 * 60 * 1000 };
     console.log(`OTP for ${email}: ${otp}`);
-
     await sendEmail(
       email,
       "Password Reset OTP",
@@ -578,7 +606,6 @@ app.post("/api/reset-password", async (req, res) => {
       return res.status(400).json({ message: "OTP expired. Please request a new one." });
     }
     if (storedOtp.code !== otp) return res.status(400).json({ message: "Invalid OTP" });
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.updateOne({ email }, { password: hashedPassword });
     delete otpStore[email];
@@ -630,19 +657,16 @@ app.get("/api/admin/analytics", async (req, res) => {
     const totalUsers = await User.countDocuments();
     const totalApplications = await Application.countDocuments();
     const totalBookmarks = await Bookmark.countDocuments();
-
     const topApplied = await Application.aggregate([
       { $group: { _id: "$jobId", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 1 }
     ]);
-
     let mostAppliedJob = "No applications yet";
     if (topApplied.length > 0) {
       const job = await Job.findById(topApplied[0]._id);
       if (job) mostAppliedJob = job.title;
     }
-
     res.json({ totalJobs, totalUsers, totalApplications, totalBookmarks, mostAppliedJob });
   } catch (err) {
     console.log("GET /api/admin/analytics error:", err.message);
@@ -660,19 +684,16 @@ app.put("/api/application-status", async (req, res) => {
       return res.status(400).json({ message: "applicationId and status are required" });
     }
     await Application.findByIdAndUpdate(applicationId, { status, updatedAt: new Date() });
-
     let message = "";
     if (status === "Shortlisted") message = `<h2>Congratulations ${name} 🎉</h2><p>You are shortlisted for the next round.</p>`;
     else if (status === "Rejected") message = `<h2>Hello ${name}</h2><p>Your application was not selected.</p>`;
     else if (status === "Selected") message = `<h2>Congratulations ${name} 🚀</h2><p>You have been selected for the job.</p>`;
     else message = `<h2>Hello ${name}</h2><p>Your application is under review.</p>`;
-
     try {
       await sendEmail(email, `Application Status: ${status}`, message);
     } catch (mailErr) {
       console.log("Status email error:", mailErr.message);
     }
-
     res.json({ message: `Application marked as ${status}` });
   } catch (err) {
     console.log("PUT /api/application-status error:", err.message);

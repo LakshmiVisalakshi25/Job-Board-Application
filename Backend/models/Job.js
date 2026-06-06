@@ -53,8 +53,11 @@ const jobSchema = new mongoose.Schema({
   skills: {
     type: [String],
     default: []
+  },
+   description: {
+    type: String,
+    default: ""
   }
-
 },
 {
   // ===============================
