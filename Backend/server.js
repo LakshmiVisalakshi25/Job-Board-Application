@@ -66,10 +66,31 @@ const sendEmail = async (to, subject, html) => {
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type"],
+  allowedHeaders: ["Content-Type", "Authorization"], // ADDED Authorization
   credentials: true,
 }));
 app.use(express.json());
+
+// ===============================
+// JWT MIDDLEWARE — NEW
+// ===============================
+const verifyAdmin = (req, res, next) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, SECRET);
+    if (decoded.role !== "admin") {
+      return res.status(403).json({ message: "Access denied. Admins only." });
+    }
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+};
 
 // ===============================
 // INSERT DEFAULT JOBS
@@ -82,26 +103,106 @@ const insertDefaultJobs = async () => {
       return;
     }
     const defaultJobs = [
-      { title: "React Developer", company: "Infosys", location: "Hyderabad", salary: 60000, type: "Remote", skills: ["React", "JavaScript", "CSS"] },
-      { title: "Node.js Developer", company: "TCS", location: "Bangalore", salary: 70000, type: "Hybrid", skills: ["Node.js", "MongoDB", "Express"] },
-      { title: "Full Stack Developer", company: "Wipro", location: "Chennai", salary: 85000, type: "Onsite", skills: ["React", "Node.js", "MongoDB"] },
-      { title: "Python Developer", company: "Capgemini", location: "Pune", salary: 75000, type: "Remote", skills: ["Python", "Django", "SQL"] },
-      { title: "Java Developer", company: "Tech Mahindra", location: "Vizag", salary: 65000, type: "Hybrid", skills: ["Java", "Spring Boot", "MySQL"] },
-      { title: "Frontend Developer", company: "Google", location: "Hyderabad", salary: 120000, type: "Remote", skills: ["React", "Tailwind", "JavaScript"] },
-      { title: "Backend Engineer", company: "Amazon", location: "Bangalore", salary: 150000, type: "Onsite", skills: ["Node.js", "AWS", "MongoDB"] },
-      { title: "Software Engineer", company: "Microsoft", location: "Noida", salary: 140000, type: "Hybrid", skills: ["C#", ".NET", "Azure"] },
-      { title: "Data Analyst", company: "Deloitte", location: "Mumbai", salary: 80000, type: "Remote", skills: ["SQL", "Power BI", "Excel"] },
-      { title: "Machine Learning Engineer", company: "Accenture", location: "Pune", salary: 130000, type: "Hybrid", skills: ["Python", "TensorFlow", "AI"] },
-      { title: "DevOps Engineer", company: "IBM", location: "Chennai", salary: 110000, type: "Onsite", skills: ["Docker", "Kubernetes", "AWS"] },
-      { title: "UI/UX Designer", company: "Adobe", location: "Delhi", salary: 90000, type: "Remote", skills: ["Figma", "UI Design", "UX"] },
-      { title: "Cloud Engineer", company: "Oracle", location: "Hyderabad", salary: 125000, type: "Hybrid", skills: ["Cloud", "AWS", "Linux"] },
-      { title: "Android Developer", company: "Paytm", location: "Noida", salary: 95000, type: "Remote", skills: ["Kotlin", "Android", "Firebase"] },
-      { title: "iOS Developer", company: "Zoho", location: "Chennai", salary: 98000, type: "Hybrid", skills: ["Swift", "iOS", "Xcode"] },
-      { title: "Cyber Security Analyst", company: "HCL", location: "Bangalore", salary: 115000, type: "Onsite", skills: ["Cyber Security", "Networking", "Linux"] },
-      { title: "QA Engineer", company: "Cognizant", location: "Hyderabad", salary: 70000, type: "Remote", skills: ["Testing", "Selenium", "Automation"] },
-      { title: "AI Engineer", company: "OpenAI", location: "Remote", salary: 200000, type: "Remote", skills: ["AI", "LLM", "Python"] },
-      { title: "Blockchain Developer", company: "Polygon", location: "Mumbai", salary: 160000, type: "Hybrid", skills: ["Blockchain", "Solidity", "Web3"] },
-      { title: "Game Developer", company: "Ubisoft", location: "Pune", salary: 100000, type: "Onsite", skills: ["Unity", "C#", "Game Design"] }
+      {
+        title: "React Developer", company: "Infosys", location: "Hyderabad",
+        salary: 60000, type: "Remote", skills: ["React", "JavaScript", "CSS"],
+        description: "Build and maintain modern web applications using React. You will collaborate with designers and backend developers to deliver high-quality user interfaces. Strong understanding of component-based architecture required."
+      },
+      {
+        title: "Node.js Developer", company: "TCS", location: "Bangalore",
+        salary: 70000, type: "Hybrid", skills: ["Node.js", "MongoDB", "Express"],
+        description: "Develop and maintain scalable server-side applications using Node.js and Express. Work with MongoDB databases and RESTful APIs. Experience with authentication and security best practices is a plus."
+      },
+      {
+        title: "Full Stack Developer", company: "Wipro", location: "Chennai",
+        salary: 85000, type: "Onsite", skills: ["React", "Node.js", "MongoDB"],
+        description: "Design and develop full-stack web applications from frontend to backend. You will work across the entire tech stack using React, Node.js, and MongoDB. Strong problem-solving skills and attention to detail required."
+      },
+      {
+        title: "Python Developer", company: "Capgemini", location: "Pune",
+        salary: 75000, type: "Remote", skills: ["Python", "Django", "SQL"],
+        description: "Develop backend services and APIs using Python and Django. Work with relational databases and write clean, maintainable code. Experience with REST APIs and SQL is essential."
+      },
+      {
+        title: "Java Developer", company: "Tech Mahindra", location: "Vizag",
+        salary: 65000, type: "Hybrid", skills: ["Java", "Spring Boot", "MySQL"],
+        description: "Build enterprise-grade applications using Java and Spring Boot. Collaborate with cross-functional teams to deliver robust backend systems. MySQL database knowledge and OOP concepts are required."
+      },
+      {
+        title: "Frontend Developer", company: "Google", location: "Hyderabad",
+        salary: 120000, type: "Remote", skills: ["React", "Tailwind", "JavaScript"],
+        description: "Create beautiful, responsive, and performant user interfaces for Google's web products. You will work with cutting-edge frontend technologies and contribute to large-scale systems serving millions of users."
+      },
+      {
+        title: "Backend Engineer", company: "Amazon", location: "Bangalore",
+        salary: 150000, type: "Onsite", skills: ["Node.js", "AWS", "MongoDB"],
+        description: "Design and implement high-performance backend systems for Amazon's platform. You will work with distributed systems, AWS cloud services, and large-scale databases. Strong system design skills are essential."
+      },
+      {
+        title: "Software Engineer", company: "Microsoft", location: "Noida",
+        salary: 140000, type: "Hybrid", skills: ["C#", ".NET", "Azure"],
+        description: "Develop and maintain enterprise software solutions using C# and .NET. Leverage Azure cloud services to build scalable applications. Collaborate with global teams and contribute to Microsoft's product ecosystem."
+      },
+      {
+        title: "Data Analyst", company: "Deloitte", location: "Mumbai",
+        salary: 80000, type: "Remote", skills: ["SQL", "Power BI", "Excel"],
+        description: "Analyze large datasets to generate actionable business insights. Build dashboards and reports using Power BI and Excel. Strong SQL skills and experience with data visualization tools are required."
+      },
+      {
+        title: "Machine Learning Engineer", company: "Accenture", location: "Pune",
+        salary: 130000, type: "Hybrid", skills: ["Python", "TensorFlow", "AI"],
+        description: "Design and deploy machine learning models to solve real-world business problems. Work with large datasets and deep learning frameworks like TensorFlow. A strong foundation in mathematics and statistics is essential."
+      },
+      {
+        title: "DevOps Engineer", company: "IBM", location: "Chennai",
+        salary: 110000, type: "Onsite", skills: ["Docker", "Kubernetes", "AWS"],
+        description: "Manage CI/CD pipelines and cloud infrastructure for IBM's enterprise products. Work with Docker, Kubernetes, and AWS to ensure high availability and scalability. Strong scripting and automation skills required."
+      },
+      {
+        title: "UI/UX Designer", company: "Adobe", location: "Delhi",
+        salary: 90000, type: "Remote", skills: ["Figma", "UI Design", "UX"],
+        description: "Design intuitive and visually compelling user experiences for Adobe's suite of products. Conduct user research, create wireframes, and develop high-fidelity prototypes using Figma. A strong portfolio is required."
+      },
+      {
+        title: "Cloud Engineer", company: "Oracle", location: "Hyderabad",
+        salary: 125000, type: "Hybrid", skills: ["Cloud", "AWS", "Linux"],
+        description: "Architect and manage cloud infrastructure on AWS and Oracle Cloud. Ensure security, performance, and reliability of cloud-based systems. Linux administration and scripting experience are essential."
+      },
+      {
+        title: "Android Developer", company: "Paytm", location: "Noida",
+        salary: 95000, type: "Remote", skills: ["Kotlin", "Android", "Firebase"],
+        description: "Build and optimize Android applications used by millions of Paytm users. Work with Kotlin, Firebase, and REST APIs to deliver fast and reliable mobile experiences. Experience with Play Store deployment is a plus."
+      },
+      {
+        title: "iOS Developer", company: "Zoho", location: "Chennai",
+        salary: 98000, type: "Hybrid", skills: ["Swift", "iOS", "Xcode"],
+        description: "Develop feature-rich iOS applications for Zoho's product lineup. Work with Swift, UIKit, and Xcode to build high-performance mobile apps. Experience with App Store submission and Apple guidelines required."
+      },
+      {
+        title: "Cyber Security Analyst", company: "HCL", location: "Bangalore",
+        salary: 115000, type: "Onsite", skills: ["Cyber Security", "Networking", "Linux"],
+        description: "Monitor, detect, and respond to security threats across HCL's infrastructure. Conduct vulnerability assessments and implement security controls. Strong knowledge of networking, Linux, and security frameworks required."
+      },
+      {
+        title: "QA Engineer", company: "Cognizant", location: "Hyderabad",
+        salary: 70000, type: "Remote", skills: ["Testing", "Selenium", "Automation"],
+        description: "Design and execute automated and manual test cases for enterprise applications. Work with Selenium and testing frameworks to ensure software quality. Attention to detail and strong analytical skills are essential."
+      },
+      {
+        title: "AI Engineer", company: "OpenAI", location: "Remote",
+        salary: 200000, type: "Remote", skills: ["AI", "LLM", "Python"],
+        description: "Research and develop cutting-edge AI systems and large language models at OpenAI. Work on training pipelines, evaluation frameworks, and deployment of AI models. A strong background in ML and Python is required."
+      },
+      {
+        title: "Blockchain Developer", company: "Polygon", location: "Mumbai",
+        salary: 160000, type: "Hybrid", skills: ["Blockchain", "Solidity", "Web3"],
+        description: "Build decentralized applications and smart contracts on the Polygon blockchain. Work with Solidity, Web3.js, and DeFi protocols. Deep understanding of blockchain architecture and cryptography is required."
+      },
+      {
+        title: "Game Developer", company: "Ubisoft", location: "Pune",
+        salary: 100000, type: "Onsite", skills: ["Unity", "C#", "Game Design"],
+        description: "Design and develop engaging game mechanics and systems using Unity and C#. Collaborate with artists and designers to bring game concepts to life. A passion for gaming and experience shipping titles is a big plus."
+      }
     ];
     await Job.insertMany(defaultJobs);
     console.log("Default jobs inserted successfully ✅");
@@ -148,14 +249,12 @@ app.get('/api/jobs', async (req, res) => {
 });
 
 // ===============================
-// GET SINGLE JOB BY ID  ← NEW
+// GET SINGLE JOB BY ID
 // ===============================
 app.get('/api/jobs/:id', async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
-    if (!job) {
-      return res.status(404).json({ message: "Job not found" });
-    }
+    if (!job) return res.status(404).json({ message: "Job not found" });
     res.json(job);
   } catch (err) {
     console.log("GET /api/jobs/:id error:", err.message);
@@ -164,14 +263,10 @@ app.get('/api/jobs/:id', async (req, res) => {
 });
 
 // ===============================
-// ADD JOB
+// ADD JOB — JWT PROTECTED
 // ===============================
-app.post('/api/jobs', async (req, res) => {
+app.post('/api/jobs', verifyAdmin, async (req, res) => {
   try {
-    const { role } = req.body;
-    if (role !== "admin") {
-      return res.status(403).json({ message: "Access denied" });
-    }
     const job = new Job(req.body);
     await job.save();
     res.json({ message: "Job added successfully" });
@@ -273,13 +368,9 @@ app.post('/api/login', async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
+    if (!user) return res.status(400).json({ message: "User not found" });
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Wrong password" });
-    }
+    if (!isMatch) return res.status(400).json({ message: "Wrong password" });
     const token = jwt.sign(
       { id: user._id, role: user.role },
       SECRET,
@@ -300,19 +391,15 @@ app.post('/api/apply', async (req, res) => {
     const { userId, jobId, name, email, phone, address, percentage, resume, photo } = req.body;
 
     const existing = await Application.findOne({ userId, jobId });
-
     if (existing && existing.status !== "Rejected") {
       return res.status(400).json({ message: "Already applied" });
     }
-
     if (existing && existing.status === "Rejected") {
       await Application.deleteOne({ _id: existing._id });
     }
 
     const job = await Job.findById(jobId);
-    if (!job) {
-      return res.status(404).json({ message: "Job not found" });
-    }
+    if (!job) return res.status(404).json({ message: "Job not found" });
 
     const application = new Application({
       userId, jobId, name, email,
@@ -345,9 +432,7 @@ app.delete('/api/apply', async (req, res) => {
   try {
     const { userId, jobId } = req.body;
     const application = await Application.findOne({ userId, jobId });
-    if (!application) {
-      return res.status(404).json({ message: "Application not found" });
-    }
+    if (!application) return res.status(404).json({ message: "Application not found" });
     const job = await Job.findById(jobId);
     await Application.deleteOne({ userId, jobId });
 
@@ -400,9 +485,7 @@ app.get('/api/applications/:jobId', async (req, res) => {
 app.post("/api/chatbot", async (req, res) => {
   try {
     const { message } = req.body;
-    if (!message) {
-      return res.status(400).json({ reply: "Message is required", jobs: [] });
-    }
+    if (!message) return res.status(400).json({ reply: "Message is required", jobs: [] });
 
     const userMessage = message.toLowerCase();
     const jobs = await Job.find();
@@ -456,7 +539,6 @@ app.post("/api/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
-
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
@@ -465,7 +547,6 @@ app.post("/api/send-otp", async (req, res) => {
       lowerCaseAlphabets: false,
       specialChars: false
     });
-
     otpStore[email] = { code: otp, expiresAt: Date.now() + 10 * 60 * 1000 };
     console.log(`OTP for ${email}: ${otp}`);
 
@@ -474,7 +555,6 @@ app.post("/api/send-otp", async (req, res) => {
       "Password Reset OTP",
       `<h2>Your OTP Code</h2><h1 style="letter-spacing: 8px;">${otp}</h1><p>This OTP is valid for <b>10 minutes</b>.</p><p>If you did not request this, ignore this email.</p>`
     );
-
     res.json({ message: "OTP sent successfully" });
   } catch (err) {
     console.log("Send OTP error:", err.message);
@@ -491,7 +571,6 @@ app.post("/api/reset-password", async (req, res) => {
     if (!email || !otp || !newPassword) {
       return res.status(400).json({ message: "All fields are required" });
     }
-
     const storedOtp = otpStore[email];
     if (!storedOtp) return res.status(400).json({ message: "OTP not found. Please request a new one." });
     if (Date.now() > storedOtp.expiresAt) {
@@ -503,7 +582,6 @@ app.post("/api/reset-password", async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.updateOne({ email }, { password: hashedPassword });
     delete otpStore[email];
-
     res.json({ message: "Password reset successful" });
   } catch (err) {
     console.log("Reset password error:", err.message);
@@ -581,7 +659,6 @@ app.put("/api/application-status", async (req, res) => {
     if (!applicationId || !status) {
       return res.status(400).json({ message: "applicationId and status are required" });
     }
-
     await Application.findByIdAndUpdate(applicationId, { status, updatedAt: new Date() });
 
     let message = "";
